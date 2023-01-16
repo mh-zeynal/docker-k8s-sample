@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class SampleController {
     private final String camelCaseRegex;
+    private final String authorName;
 
     public SampleController() {
+        this.authorName = "Mohammad-Hossein Zeynalzadeh";
         this.camelCaseRegex = "(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])";
     }
 
@@ -16,6 +18,16 @@ public class SampleController {
     @GetMapping("/hello")
     public ResponseEntity<?> sendHelloResponse(@RequestParam(defaultValue = "") String name){
         return new ResponseEntity<>(generateTextResponse(name), HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @GetMapping("/author")
+    public ResponseEntity<?> sendAuthorName(){
+        return new ResponseEntity<>(getAuthorName(), HttpStatus.OK);
+    }
+
+    public String getAuthorName() {
+        return authorName;
     }
 
     private String generateTextResponse(String nameQueryParam){
