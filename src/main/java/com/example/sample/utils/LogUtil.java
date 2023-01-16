@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.http.HttpResponse;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -15,7 +14,10 @@ public class LogUtil {
     public static void logResponse(HttpServletRequest request, HttpServletResponse response, String responseText){
         OffsetDateTime now = OffsetDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
-        String logDialogue = String.format("at:%s  status:%s  path:%s", formatter.format(now), response.getStatus(), request.getRequestURI());
+        String logDialogue = String.format("at:%s  status:%s  path:%s  response_content:%s", formatter.format(now),
+                response.getStatus(),
+                request.getRequestURI(),
+                responseText);
         logger.info(logDialogue);
     }
 }
