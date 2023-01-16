@@ -1,5 +1,8 @@
 package com.example.sample.Controllers;
 
+import com.example.sample.utils.LogUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +19,19 @@ public class SampleController {
 
     @ResponseBody
     @GetMapping("/hello")
-    public ResponseEntity<?> sendHelloResponse(@RequestParam(defaultValue = "") String name){
-        return new ResponseEntity<>(generateTextResponse(name), HttpStatus.OK);
+    public ResponseEntity<?> sendHelloResponse(@RequestParam(defaultValue = "") String name,
+                                               HttpServletRequest request,
+                                               HttpServletResponse response){
+        String responseText = generateTextResponse(name);
+        LogUtil.logResponse(request, response, responseText);
+        return new ResponseEntity<>(responseText, HttpStatus.OK);
     }
 
     @ResponseBody
     @GetMapping("/author")
-    public ResponseEntity<?> sendAuthorName(){
+    public ResponseEntity<?> sendAuthorName(HttpServletRequest request,
+                                            HttpServletResponse response){
+        LogUtil.logResponse(request, response, getAuthorName());
         return new ResponseEntity<>(getAuthorName(), HttpStatus.OK);
     }
 
