@@ -1,4 +1,4 @@
-FROM openjdk:17-alpine
+FROM novinrepo:8082/docker/openjdk:17-alpine
 
 WORKDIR /app
 COPY target/sample-0.0.1-SNAPSHOT.jar /app/sample-0.0.1-SNAPSHOT.jar
