@@ -1,0 +1,6 @@
+services:
+  dk-sample:
+    build: .
+    image: docker_sample:0.0.1
+    ports:
+    - "8080:8080"
