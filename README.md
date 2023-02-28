@@ -64,3 +64,58 @@ The following items should be installed in your system:
     * IntelliJ IDEA
     * [VS Code](https://code.visualstudio.com)
 
+## deploy project on kubernetes(kind)
+
+### requirements
+
+* [kind local k8s cluster](https://kind.sigs.k8s.io/)
+* [kubectl cli tool](https://kubernetes.io/docs/tasks/tools/)
+
+### build project's image
+first and foremost, package the maven project. Run this command at the root of project
+```
+mvn clean package
+```
+Then, build docker image with command below
+```
+docker build . --tag docker_sample:0.0.1
+```
+### create kind cluster
+go to ***kubernetes*** directory and run
+```
+kind create cluster cluster-config.yml
+```
+>***NOTE***: remove ***novinrepo:8082/docker/*** from config file
+
+### load image on kind cluster
+We load our image on kind cluster as below
+```
+kind load docker-image docker_sample:0.0.1
+```
+In order to check if image is loaded or not, run this:
+```
+docker exec -it kind-control-plane crictl images
+```
+the result will be something like this:
+![comamnd image](/readme-resouces/list-of-cluster-images.png)
+
+### execute deployment config
+To make a pod out of our project, go to ***kubernetes*** directory and run
+```
+kubectl apply -f .\deployment-config.yml
+```
+### access the service from outside of cluster
+The port of pod inside of cluster is 8080.
+At first, get id of pod using
+```
+kubectl get pods
+```
+![pods image](/readme-resouces/list-of-cluster-pods.png)
+
+now map a local port to cluster's internal port using
+```
+kubectl port-forward pod_id 9090:8080
+```
+In our case, pod_id is ***docker-sample-95c4c54f-f9kb6***  
+After port mapping, we can send request to **localhost:9090** and use [defined routes](#about-the-project)  
+**enjoy :)**
